@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="loginRegisterStyle.css">
+    </head>
+    <body>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+        <script src="https://malsup.github.io/jquery.form.js"></script> 
+
+        <div class="login">
+            <div class="loginContain">
+                <div class="loginBox">
+                    <h1>Login</h1>
+                    <form action="/login" method="POST" id="loginForm">
+                        <input type="text" name="username" placeholder="Username" required><br>
+                        <div class="passwordContainer">
+                            <input type="password" name="password" placeholder="Password" autocomplete="current-password" id="current-password" required><br>
+                            <i class="showPassword">Show</i>
+                        </div>
+                        <input type="submit" name="Login" value="Log In" id="loginBtn">
+                    </form>
+                    <a href="/register">New User?</a>
+                </div>
+            </div>
+        </div>
+        
+
+
+        <div id="flashDiv">
+            <% for (let i = 0; i < flashError.length; i++) { %>
+                <div class="flashError">
+                    <%= flashError[i] %>
+                </div>
+            <% } %>
+
+            <% for (let i = 0; i < flashMessage.length; i++) { %>
+                <div class="flashMessage">
+                    <%= flashMessage[i] %>
+                </div>
+            <% } %>
+        </div>
+
+        <script>
+            $(document).ready(function() {
+                $(document).on('click', '.showPassword', function(e) {
+                    e.preventDefault();
+
+                    let password = $(this).prevAll('input')[0];
+                    if ($(password).attr('type') === 'password') {
+                        $(password).prop('type', 'text');
+                        $(this).html('Hide');
+                    }
+                    else {
+                        $(password).prop('type', 'password');
+                        $(this).html('Show')
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

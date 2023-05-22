@@ -1,0 +1,109 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login, .register {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 30px;
+}
+
+.loginContain, .registerContain {
+    width: 500px;
+}
+
+.loginBox, .registerBox {
+    background-color: white;
+    padding: 20px 0px 20px 0px;
+    box-shadow: 5px 5px 10px 10px rgba(0, 0, 0, 0.10);
+    margin-bottom: 20px;
+}
+
+.loginBox h1, .registerBox h1{
+    margin: 10px 5% 50px 5%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 60px;
+}
+
+
+.loginBox input, .registerBox input {
+    width: 90%;
+    box-sizing: border-box;
+    font-size: 20px;
+    padding: 15px 10px 15px 10px;
+    margin: 10px 5% 10px 5%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+}
+
+.loginBox a, .registerBox a {
+    display: block;
+    margin: 20px 5% 15px 5%;
+    color: black;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.passwordContainer {
+    position: relative;
+}
+
+.showPassword {
+    position: absolute;
+    top: 10px;
+    right: 5%;
+    padding: 17px 12px 17px 12px;
+    font-size: 18px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    color: #0067D0;
+}
+
+.showPassword:hover {
+    cursor: pointer;
+}
+
+#loginBtn, #registerBtn {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    background-color: #0067D0;
+    color: white;
+    border: 1px solid black;
+}
+
+#loginBtn:hover, #registerBtn:hover {
+    background-color: #0058B2;
+}
+
+
+
+.flashMessage, .flashError {
+    width: 500px;
+    margin: 10px auto 10px auto;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.flashMessage {
+    background-color: #A0E584;
+    color: #197F12;
+    border: 1px solid #0E5209;
+}
+
+.flashError {
+    background-color: #FF8E8E;
+    border: 1px solid #8A0202;
+    color: #DF0000;
+}
+
+

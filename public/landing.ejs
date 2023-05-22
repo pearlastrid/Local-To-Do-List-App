@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="landingStyle.css">
+    </head>
+    <body>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+        <script src="https://malsup.github.io/jquery.form.js"></script> 
+
+        <div class="fixedButtons">
+            <input type="button" id="addList" value="New List">
+            <a href="/logout" id="logoutBtn">Log out</a><br>
+        </div>
+
+        <div class="toDos">
+            <% for (let i = 0; i < userToDos.length; i++) { %>
+                <div class="list" id="list<%=userToDos[i].ID%>">
+                    <input type="text" class="listTitle" value="<%=userToDos[i].NAME%>">
+                    <input type="button" class="deleteList">
+                    <form action="/addToDo" method="POST" class="addToDoContain">
+                        <input type="text" name="task" placeholder="Todo" class="addToDoInput">
+                        <input type="submit" class="addToDoBtn" value="Add">
+                    </form>
+                    <ul class="taskList">
+                        <% for (let k = 0; k < userToDos[i].listToDos.length; k++) { %>
+                            <li id="task<%=userToDos[i].listToDos[k].todo_id%>">
+                                <div class="toDoContain">
+                                    <% if (parseInt(userToDos[i].listToDos[k].is_done) === 1) { %>
+                                        <input type="checkbox" class="toDoCheckbox" name="isDone" checked>
+                                        <label for="isDone" style="text-decoration: line-through;"><%=userToDos[i].listToDos[k].task%></label>
+                                    <% } else { %>
+                                        <input type="checkbox" class="toDoCheckbox" name="isDone">
+                                        <label for="isDone" style="text-decoration: none;"><%=userToDos[i].listToDos[k].task%></label>
+                                    <% } %>
+                                </div>
+                                <input type="button" class="removeToDoBtn">
+                            </li>
+                        <% } %>
+                    </ul>
+                </div>
+            <% } %>
+        </div>
+
+        <div id="flashDiv">
+            <% for (let i = 0; i < flashError.length; i++) { %>
+                <div class="flashError">
+                    <%= flashError[i] %>
+                </div>
+            <% } %>
+        </div>
+
+
+        <script>
+            $(document).ready(function() {
+
+
+                function errorHandler(xhr) {
+                    if (xhr.status === 401) {
+                        location.href = '/login';
+                    }
+                    else if (xhr.status === 404) {
+                        document.body.innerHTML = xhr.responseText;
+                    }
+                    else {
+                        $("#flashDiv").append(`<div class="flashError">Something went wrong.</div>`);
+                    }
+                }
+
+                function updateListTitle(listTitle, list_id) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/updateListTitle',
+                        data: {
+                            id: list_id,
+                            newTitle: listTitle
+                        },
+                        success: function(response) {
+                            if (!response.success) {
+                                $('#flashDiv').append(`<div class="flashError">${response.body.message}</div>`);
+                            }
+                        },
+                        error: errorHandler
+                    });
+                    
+                }
+
+                $(document).on('click', '.addToDoBtn', function(e) {
+                    e.preventDefault();
+                    let form = $(this).closest('form');
+
+                    dataArray = form.serializeArray();
+                    dataArray = dataArray.concat([
+                        {name: 'list_id', value: form.parent().attr('id').substring('list'.length)}
+                    ]);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/addToDo',
+                        data: dataArray,
+                        success: function(response) {
+                            if (response.success) {
+                                let task = $(`<li></li>"`).attr('id', `task${response.body.id}`);
+                                let toDoContain = $('<div></div>').attr('class', 'toDoContain');
+                                toDoContain.append('<input type="checkbox" class="toDoCheckbox" name="isDone">');
+                                toDoContain.append(`<label for="isDone">${response.body.task}</label>`);
+                                task.append(toDoContain);
+                                task.append('<input type="button" class="removeToDoBtn">');
+
+                                form.next('.taskList').append(task);
+                            }
+                            else {
+                                $("#flashDiv").append(`<div class="flashError">${response.body.message}</div>`);
+                            }
+                            
+                        },
+                        error: errorHandler
+
+                    });
+                    
+                });
+
+                $(document).on('click', '#addList', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/addList',
+                        data: {
+                            name: 'Untitled'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                console.log("success");
+                                let form = $('<form></form>').attr('action', '/addToDo').attr('method', 'POST').attr('class', 'addToDoContain');
+                                form.append('<input type="text" name="task" placeholder="Todo" class="addToDoInput">');
+                                form.append('<input type="submit" class="addToDoBtn" value="Add">');
+
+                                let div = $('<div></div>').attr('class', 'list').attr('id', `list${response.body.id}`);
+                                div.append(`<input type="text" class="listTitle" value="Untitled">`);
+                                div.append('<input type="button" class="deleteList">');
+                                div.append(form);
+                                div.append('<ul class="taskList"></ul>');
+
+                                $('.toDos').append(div);
+                            }
+                            else {
+                                $("#flashDiv").append(`<div class="flashError">${response.body.message}</div>`);
+                            }
+                            
+                        },
+                        error: errorHandler
+                        
+                    });
+                });
+                
+                $(document).on('click', '.deleteList', function(e) {
+                    e.preventDefault();
+                    let div = $(this).closest('div');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/deleteList',
+                        data: {
+                            id: div.attr('id').substring('list'.length)
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                div.remove();
+                            }
+                            else {
+                                $("#flashDiv").append(`<div class="flashError">${response.body.message}</div>`);
+                            }
+                        },
+                        error: errorHandler
+                    });
+                });
+
+                $(document).on('click', '.removeToDoBtn', function(e) {
+                    e.preventDefault();
+                    let li = $(this).closest('li');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/removeToDo',
+                        data: {
+                            id: li.attr('id').substring('task'.length)
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                li.remove();
+                            }
+                            else {
+                                $("#flashDiv").append(`div class="flashError">${response.body.message}</div>`);
+                            }
+                        },
+                        error: errorHandler
+
+                    });
+                });
+
+                $(document).on('change', '.toDoCheckbox', function(e) {
+                    e.preventDefault();
+
+                    let li = $(this).closest('li');
+
+                    if (this.checked) {
+                        $(this).next('label').css('text-decoration', 'line-through');
+                    }
+                    else {
+                        $(this).next('label').css('text-decoration', 'none');
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/updateToDoCheckbox',
+                        data: {
+                            id: li.attr('id').substring('task'.length),
+                            is_done: (this.checked ? 1 : 0)
+                        },
+                        success: function(response) {
+                            if (!response.success) {
+                                $("#flashDiv").append(`<div class="flashError">${response.body.message}</div>`);
+                            }
+                        },
+                        error: errorHandler
+                    });
+                });
+                
+                let timeoutID;
+                $(document).on('input', '.listTitle', function(e) {
+                    e.preventDefault();
+                    
+                    clearTimeout(timeoutID);
+                    timeoutID = setTimeout(() => {
+                        updateListTitle($(this).val(), $(this).closest('div').attr('id').substring('list'.length))
+                    }, 1000);
+                });
+                
+
+            });
+        </script>
+        
+    </body>
+</html>

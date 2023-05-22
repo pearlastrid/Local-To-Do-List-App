@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="loginRegisterStyle.css">
+    </head>
+    <body>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+        <script src="https://malsup.github.io/jquery.form.js"></script> 
+
+        <div class="register">
+            <div class="registerContain">
+                <div class="registerBox">
+                    <h1>Register</h1>
+                    <form action="/register" method="POST" id="registrationForm">
+                        <input type="text" name="username" placeholder="Username" required><br>
+                        <div class="passwordContainer">
+                            <input type="password" name="password" autocomplete="new-password" id="new-password" placeholder="Password" required><br>
+                            <i class="showPassword">Show</i>
+                        </div>
+                        <div class="passwordContainer">
+                            <input type="password" name="confirmPassword" autocomplete="new-password" id="confirm-password" placeholder="Confirm Password" required><br>
+                            <i class="showPassword">Show</i>
+                        </div>
+                        <input type="submit" id="registerBtn" value="Register">
+                    </form>
+                    <a href="/login">Back to Login</a><br>
+                </div>
+            </div>
+        </div>
+
+        <div id="flashDiv">
+
+        </div>
+
+
+        <script>
+            $(document).ready(function() {
+                $(document).on('click', '.showPassword', function(e) {
+                    e.preventDefault();
+
+                    let password = $(this).prevAll('input')[0];
+                    if ($(password).attr('type') === 'password') {
+                        $(password).prop('type', 'text');
+                        $(this).html('Hide');
+                    }
+                    else {
+                        $(password).prop('type', 'password');
+                        $(this).html('Show')
+                    }
+                });
+
+
+                $("#registrationForm").ajaxForm({
+                    url: '/register',
+                    datatype: 'json',
+                    // we want the response message, flashMessage for success and flashError for failure
+                    success: function(response) {
+                        if (response.success) {
+                            $('#flashDiv').append(`<div class="flashMessage">${response.body.message}</div>`);
+                        }
+                        else {
+                            $('#flashDiv').append(`<div class="flashError">${response.body.message}</div>`);
+                        }
+                    },
+                    error: function() {
+                        $('#flashDiv').append(`<div class="flashError">Something went wrong.</div>`);
+                    }
+                        
+                });
+            });
+            
+        </script>
+    </body>
+</html>

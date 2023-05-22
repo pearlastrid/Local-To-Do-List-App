@@ -1,0 +1,166 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    position: relative;
+    width: 100%
+}
+
+.fixedButtons {
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    right: 0;
+    top: 0;
+    z-index: 1;
+}
+
+#addList, #logoutBtn {
+    display: block;
+    border: 1px solid black;
+    background-color: white;
+    width: 150px;
+    padding: 10px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px;
+    box-sizing: border-box;
+    text-decoration: none;
+    text-align: center;
+    color: black;
+    margin: 10px;
+}
+
+
+#addList:hover, #logoutBtn:hover {
+    background-color: #EEEEEE;
+    cursor: pointer;
+}
+
+
+.list {
+    border: 1px solid transparent;
+    width: 70%;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 10px 10px rgba(0, 0, 0, 0.10);
+    margin: 50px auto 0px auto;
+}
+
+.deleteList {
+    background-image: url('trash_icon.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    background-color: white;
+    right: 15px;
+    bottom: 15px;
+    border: 1px solid black;
+   
+}
+
+.deleteList:hover {
+    background-color: #EEEEEE;
+    cursor: pointer;
+}
+
+.listTitle {
+    font-weight: bold;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 40px;
+    border: none;
+    border-width: 0;
+    margin: 15px;
+}
+
+.listTitle:focus {
+    outline: none;
+}
+
+.addToDoContain {
+    margin: 0px 65px 0px 15px;
+    position: relative;
+    
+}
+
+.addToDoBtn {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    border: 1px solid black;
+    background-color: #0067D0;
+    width: 10%;
+    color: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.addToDoBtn:hover {
+    background-color: #0058B2;
+    cursor: pointer;
+}
+
+.addToDoInput {
+    font-size: 18px;
+    padding: 5px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    width: 90%;
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-right: none;
+
+}
+
+.taskList {
+    list-style-type: none;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.taskList li {
+    margin: 0px 80px 0px 0px;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.toDoContain {
+    width: 92%;
+    display: flex;
+    flex-direction: row;
+}
+
+.toDoCheckbox {
+    align-self: flex-start;
+    margin-right: 15px;
+    margin-top: 5px;
+}
+
+.removeToDoBtn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-image: url('remove_icon.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: white;
+    height: 20px;
+    width: 20px;
+    background-size: 20px 20px;
+    border: none;
+}
+
+.removeToDoBtn:hover {
+    cursor: pointer;
+}
+
+.toDos {
+    padding-top: 50px;
+    padding-bottom: 70px;
+}
+
+.toDoContain label {
+    line-height: 24px;
+}
