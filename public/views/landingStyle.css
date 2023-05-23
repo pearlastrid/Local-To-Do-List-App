@@ -73,9 +73,10 @@ body {
     font-weight: bold;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 40px;
-    border: none;
-    border-width: 0;
+    border: 1px solid transparent;
     margin: 15px;
+    width: calc(100% - 30px);
+    box-sizing: border-box;
 }
 
 .listTitle:focus {
