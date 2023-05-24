@@ -98,6 +98,7 @@ body {
     width: 10%;
     color: white;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    box-sizing: border-box;
 }
 
 .addToDoBtn:hover {
@@ -106,6 +107,7 @@ body {
 }
 
 .addToDoInput {
+    height: 100%;
     font-size: 18px;
     padding: 5px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
