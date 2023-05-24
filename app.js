@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const mysql = require("mysql");
 const session = require("express-session");
@@ -21,11 +22,10 @@ app.set('views', __dirname + '/public');
 app.set('view engine', 'ejs');
 
 var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'todo-list-app-db',
-    socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
 const sessionStore = new mySQlStore({
@@ -44,14 +44,14 @@ function register(username, password, confirmPassword) {
                 
                 if (response) {
                     console.log("User already exists");
-                    reject(new Error(`User ${username} already exists`));
+                    reject(new Error(`This user already exists.`));
                 }
                 else {
                     insertUser(username, password).then(() => {
                         console.log("User successfully inserted");
                         resolve({
                             body: {
-                                message: `User ${username} successfully inserted`
+                                message: `Successfully registered.`
                             }
                         });
                     }).catch((error) => {
@@ -568,5 +568,5 @@ app.use((req, res, next) => {
 })
 
 
-app.listen(3000);
+app.listen(process.env.PORT);
 
