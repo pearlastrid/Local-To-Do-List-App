@@ -6,7 +6,8 @@ body {
     height: 100%;
     margin: 0;
     position: relative;
-    width: 100%
+    width: 100%;
+    padding-bottom: 30px;
 }
 
 .fixedButtons {
@@ -169,7 +170,7 @@ body {
 }
 
 .flashMessage, .flashError {
-    width: 500px;
+    width: 70%;
     margin: 10px auto 10px auto;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     padding: 15px;
