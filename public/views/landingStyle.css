@@ -172,7 +172,7 @@ body {
     text-align: center;
 }
 
-.flashMessage, .flashError {
+.flashError {
     width: 70%;
     margin: 0px auto 25px auto;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -180,15 +180,6 @@ body {
     box-sizing: border-box;
     display: inline-block;
     text-align: left;
-}
-
-.flashMessage {
-    background-color: #A0E584;
-    color: #197F12;
-    border: 1px solid #0E5209;
-}
-
-.flashError {
     background-color: #FF8E8E;
     border: 1px solid #8A0202;
     color: #DF0000;
