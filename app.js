@@ -21,7 +21,8 @@ app.use(express.static(__dirname + '/public/error-pages'));
 app.set('views', __dirname + '/public');
 app.set('view engine', 'ejs');
 
-var connection = mysql.createConnection({
+var connectionPool = mysql.createPool({
+    connectionLimit: 100,
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -30,7 +31,7 @@ var connection = mysql.createConnection({
 
 const sessionStore = new mySQlStore({
     createDatabaseTable: false
-}, connection);
+}, connectionPool);
 
 // wrapper function
 function register(username, password, confirmPassword) {
@@ -86,13 +87,23 @@ function userExists(username) {
 function findUser(username) {
     console.log("inside find user");
     return new Promise((resolve, reject) => {
-        connection.query("SELECT * FROM users WHERE USERNAME=?", username, function(error, results, fields) {
-            
-            if (error) {
-                reject(new Error(error.message));
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
             }
             else {
-                resolve(results);
+                connection.query("SELECT * FROM users WHERE USERNAME=?", username, function(error, results, fields) {
+            
+                    if (error) {
+                        reject(new Error(error.message));
+                    }
+                    else {
+                        resolve(results);
+                    }
+
+                    connection.release();
+                });
             }
         });
     });
@@ -104,14 +115,25 @@ function insertUser(username, password) {
             const salt = response.salt;
             const hash = response.hash;
 
-            connection.query('INSERT INTO users (USERNAME, HASH, SALT, IS_ADMIN) VALUES (?, ?, ?, 0)', [username, hash, salt], function(error, results, fields) {
-                if (error) {
-                    reject(new Error(error.message));
+            connectionPool.getConnection((err, connection) => {
+                if (err) {
+                    connection.release();
+                    reject(new Error(err.message));
                 }
                 else {
-                    resolve("User successfully inserted");
+                    connection.query('INSERT INTO users (USERNAME, HASH, SALT, IS_ADMIN) VALUES (?, ?, ?, 0)', [username, hash, salt], function(error, results, fields) {
+                        if (error) {
+                            reject(new Error(error.message));
+                        }
+                        else {
+                            resolve("User successfully inserted");
+                        }
+
+                        connection.release();
+                    });
                 }
             });
+
         }).catch((error) => {
             reject(new Error(error.message));
         });
@@ -219,17 +241,27 @@ function parseUserToDos(results, delimInner, delimOuter) {
 
 function getUserToDos(user_id, delimInner, delimOuter) {
     return new Promise((resolve, reject) => {
-        connection.query(`SELECT lists.ID, lists.USER_ID, lists.NAME, GROUP_CONCAT(CONCAT(todos.ID, '${delimInner}', todos.TASK, '${delimInner}', todos.IS_DONE) SEPARATOR '${delimOuter}')
-        AS listToDos FROM lists LEFT JOIN todos ON lists.ID = todos.LIST_ID WHERE USER_ID=? GROUP BY lists.ID`, 
-        [user_id], function(error, results, fields) {
-            if (error) {
-                reject(new Error(error.message));
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
             }
             else {
-                parseUserToDos(results, delimInner, delimOuter).then((response) => {
-                    resolve(response);
-                }).catch((error) => {
-                    reject(new Error(error.message));
+                connection.query(`SELECT lists.ID, lists.USER_ID, lists.NAME, GROUP_CONCAT(CONCAT(todos.ID, '${delimInner}', todos.TASK, '${delimInner}', todos.IS_DONE) SEPARATOR '${delimOuter}')
+                AS listToDos FROM lists LEFT JOIN todos ON lists.ID = todos.LIST_ID WHERE USER_ID=? GROUP BY lists.ID`, 
+                [user_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
+                    }
+                    else {
+                        parseUserToDos(results, delimInner, delimOuter).then((response) => {
+                            resolve(response);
+                        }).catch((error) => {
+                            reject(new Error(error.message));
+                        });
+                    }
+
+                    connection.release();
                 });
             }
         });
@@ -239,18 +271,28 @@ function getUserToDos(user_id, delimInner, delimOuter) {
 
 function addToDo(task, list_id) {
     return new Promise((resolve, reject) => {
-        connection.query('INSERT INTO todos (TASK, IS_DONE, LIST_ID) VALUES (?, 0, ?)', [task, list_id], function(error, results, fields) {
-            if (error) {
-                reject(new Error(error.message));
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
             }
             else {
-                resolve({
-                    body: {
-                        message: 'To Do inserted successfully.',
-                        task: task,
-                        id: results.insertId
+                connection.query('INSERT INTO todos (TASK, IS_DONE, LIST_ID) VALUES (?, 0, ?)', [task, list_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
                     }
-                })
+                    else {
+                        resolve({
+                            body: {
+                                message: 'To Do inserted successfully.',
+                                task: task,
+                                id: results.insertId
+                            }
+                        })
+                    }
+
+                    connection.release();
+                });
             }
         });
     });
@@ -258,17 +300,27 @@ function addToDo(task, list_id) {
 
 function removeToDo(todo_id) {
     return new Promise((resolve, reject) => {
-        connection.query('DELETE FROM todos WHERE ID=?', [todo_id], function(error, results, fields) {
-            if (error) {
-                reject(new Error(error.message));
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
             }
             else {
-                resolve({
-                    body: {
-                        message: 'ToDo successfully deleted',
-                        id: todo_id
+                connection.query('DELETE FROM todos WHERE ID=?', [todo_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
                     }
-                })
+                    else {
+                        resolve({
+                            body: {
+                                message: 'ToDo successfully deleted',
+                                id: todo_id
+                            }
+                        })
+                    }
+
+                    connection.release();
+                });
             }
         });
     });
@@ -277,16 +329,26 @@ function removeToDo(todo_id) {
 // wrapper function
 function addList(name, user_id) {
     return new Promise((resolve, reject) => {
-        connection.query('INSERT INTO lists (NAME, USER_ID) VALUES (?, ?)', [name, user_id], function(error, results, fields) {
-            if (error) {
-                reject(new Error(error.message));
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
             }
             else {
-                resolve({
-                    body: {
-                        message: 'List sucessfully inserted.',
-                        id: results.insertId
+                connection.query('INSERT INTO lists (NAME, USER_ID) VALUES (?, ?)', [name, user_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
                     }
+                    else {
+                        resolve({
+                            body: {
+                                message: 'List sucessfully inserted.',
+                                id: results.insertId
+                            }
+                        });
+                    }
+
+                    connection.release();
                 });
             }
         });
@@ -295,6 +357,12 @@ function addList(name, user_id) {
 
 function deleteList(list_id) {
     return new Promise((resolve, reject) => {
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
+            }
+        });
         connection.query('DELETE FROM lists WHERE ID=?', [list_id], function(error, results, fields) {
             if (error) {
                 reject(new Error(error.message));
@@ -307,43 +375,65 @@ function deleteList(list_id) {
                     }
                 })
             }
+
+            connection.release();
         });
     });
 }
 
 function updateToDoCheckbox(todo_id, is_done) {
     return new Promise((resolve, reject) => {
-        connection.query('UPDATE todos SET IS_DONE=? WHERE ID=?', [is_done, todo_id], function(error, results, fields) {
-            if (error) {
-                reject(new Error(error.message));
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
             }
             else {
-                resolve({
-                    body: {
-                        message: "ToDo checkbox successfully updated.",
-                        id: todo_id
+                connection.query('UPDATE todos SET IS_DONE=? WHERE ID=?', [is_done, todo_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
                     }
+                    else {
+                        resolve({
+                            body: {
+                                message: "ToDo checkbox successfully updated.",
+                                id: todo_id
+                            }
+                        });
+                    }
+
+                    connection.release();
                 });
             }
         });
+        
     });
 }
 
 function updateListTitle(list_id, newTitle) {
     return new Promise((resolve, reject) => {
-        connection.query('UPDATE lists SET NAME=? WHERE ID=?', [newTitle, list_id], function(error, results, fields) {
-            if (error) {
-                reject(new Error(error.message));
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
             }
             else {
-                resolve({
-                    body: {
-                        message: 'List title successfully updated.',
-                        id: list_id
+                connection.query('UPDATE lists SET NAME=? WHERE ID=?', [newTitle, list_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
                     }
+                    else {
+                        resolve({
+                            body: {
+                                message: 'List title successfully updated.',
+                                id: list_id
+                            }
+                        });
+                    }
+
+                    connection.release();
                 });
             }
-                
         });
     });
 }
