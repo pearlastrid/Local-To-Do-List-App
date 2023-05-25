@@ -58,14 +58,14 @@ body {
     }
     .title h1 {
         font-size: 45px;
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 20px;
+        margin-right: 20px;
     }
 
     .title h6 {
         font-size: 15px;
         line-height: 1.5em;
-        margin: 0px 15px 10px 15px;
+        margin: 0px 20px 10px 20px;
     }
 
     .title img {
