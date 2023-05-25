@@ -51,3 +51,9 @@ body {
 .loginRegister a:hover {
     background-color: #EEEEEE;
 }
+
+@media all and (max-width: 760px) {
+    .title {
+        color: green;
+    }
+}
