@@ -7,7 +7,6 @@ body {
     margin: 0;
     position: relative;
     width: 100%;
-    align-items: center;
 }
 
 .fixedButtons {
@@ -167,6 +166,10 @@ body {
 
 .toDoContain label {
     line-height: 24px;
+}
+
+.flashDiv {
+    text-align: center;
 }
 
 .flashMessage, .flashError {
