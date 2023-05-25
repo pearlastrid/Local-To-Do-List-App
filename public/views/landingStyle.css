@@ -174,7 +174,7 @@ body {
 
 .flashMessage, .flashError {
     width: 70%;
-    margin: 0px auto 20px auto;
+    margin: 0px auto 25px auto;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     padding: 15px;
     box-sizing: border-box;
