@@ -362,21 +362,23 @@ function deleteList(list_id) {
                 connection.release();
                 reject(new Error(err.message));
             }
-        });
-        connection.query('DELETE FROM lists WHERE ID=?', [list_id], function(error, results, fields) {
-            if (error) {
-                reject(new Error(error.message));
-            }
             else {
-                resolve({
-                    body: {
-                        message: 'List successfully deleted.',
-                        id: list_id
+                connection.query('DELETE FROM lists WHERE ID=?', [list_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
                     }
-                })
+                    else {
+                        resolve({
+                            body: {
+                                message: 'List successfully deleted.',
+                                id: list_id
+                            }
+                        })
+                    }
+        
+                    connection.release();
+                });
             }
-
-            connection.release();
         });
     });
 }
