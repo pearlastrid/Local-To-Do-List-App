@@ -175,6 +175,7 @@ body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     padding: 15px;
     box-sizing: border-box;
+    display: inline-block;
 }
 
 .flashMessage {
