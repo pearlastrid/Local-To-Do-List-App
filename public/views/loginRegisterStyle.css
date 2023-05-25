@@ -78,7 +78,6 @@ body {
     background-color: #0067D0;
     color: white;
     border: 1px solid black;
-    -webkit-border-radius: 0px;
 }
 
 #loginBtn:hover, #registerBtn:hover {
