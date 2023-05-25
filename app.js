@@ -363,7 +363,7 @@ function deleteList(list_id) {
                 reject(new Error(err.message));
             }
             else {
-                connction.query('DELETE FROM lists WHERE ID=?', [list_id], function(error, results, fields) {
+                connection.query('DELETE FROM lists WHERE ID=?', [list_id], function(error, results, fields) {
                     if (error) {
                         reject(new Error(error.message));
                     }
