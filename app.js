@@ -693,6 +693,10 @@ app.get('/settings', isAuth, (req, res, next) => {
     });
 });
 
+app.get('/explore-themes', isAuth, (req, res, next) => {
+    res.render('explore-themes.ejs', {username: req.user.username});
+});
+
 app.post('/login', passport.authenticate('local', {
     failureRedirect: '/login', 
     failureFlash: true, 

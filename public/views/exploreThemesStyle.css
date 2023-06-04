@@ -1,0 +1,424 @@
+html {
+    height: 100%;
+}
+
+* {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+body {
+    height: 100;
+    width: 100%;
+    margin: 0;
+}
+
+.Standard {
+    --text-color: black;
+    --background-color: white;
+    --accent-button-color-1: #0067D0;
+    --accent-button-color-1-hover: #0058B2;
+    --accent-button-color-2: #F44434;
+    --hover-color: #EEEEEE;
+    --flash-message-border: #0E5209;
+    --flash-message-background-color: #A0E584;
+    --flash-message-color: #197F12;
+    --flash-error-border: #DF0000;
+    --flash-error-background-color: #FF8E8E;
+    --flash-error-color: #DF0000;
+    --shadow-color: 0, 0, 0;
+    --addToDoInput-color: black;
+}
+
+.Tropical {
+    --background-color: #FCEFEF;
+    --text-color: #4F2D02;
+    --accent-button-color-1: #A1FCDF;
+    --accent-button-color-1-hover: #7FD8BE;
+    --accent-button-color-2: #FCAB64;
+    --hover-color: #D0F1E7;
+    --shadow-color: 86, 99, 86;
+    --flash-error-border: #9F5C04;
+    --flash-error-background-color: #FDDBB0;
+    --flash-error-color: #C77305;
+    --flash-message-border: #07880B;
+    --flash-message-background-color: #B1FBB4;
+    --flash-message-color: #089B0D;
+    --addToDoInput-color: #4F2D02;
+
+}
+
+.Midnight {
+    --background-color: #313D5A;
+    --text-color: #F2F0FA;
+    --accent-button-color-1: #FCAB64;
+    --accent-button-color-1-hover: #FB9D4B;
+    --accent-button-color-2: #73628A;
+    --hover-color: #183642;
+    --shadow-color: 0, 0, 0;
+    --flash-error-border: #A04C03;
+    --flash-error-color: #B45604;
+    --flash-error-background-color: #FDC99B;
+    --flash-message-border: #204A5A;
+    --flash-message-color: #316E87;
+    --flash-message-background-color: #E1EFF4;
+    --addToDoInput-color: #183642;
+
+}
+
+.Aurora {
+    --background-color: #8CA0D7;
+    --text-color: #7E1F86;
+    --accent-button-color-1: #9D79BC;
+    --accent-button-color-1-hover: #A14DA0;
+    --accent-button-color-2: #91C4F2;
+    --hover-color: #B4C1E4;
+    --shadow-color: 93, 23, 99;
+    --flash-error-border: #602F60;
+    --flash-error-color: #6D366D;
+    --flash-error-background-color: #E4C8E4;
+    --flash-message-border: #354F97;
+    --flash-message-color: #405FB5;
+    --flash-message-background-color: #D2DAEF;
+    --addToDoInput-color: #7E1F86;
+}
+
+.Lemonade {
+    --background-color: #F8F5C9;
+    --text-color: #E54138;
+    --accent-button-color-1: #F4CBC6;
+    --accent-button-color-1-hover: #F4AFAB;
+    --accent-button-color-2: #F4F482;
+    --hover-color: #F5D0CC;
+    --shadow-color: 239,134,129;
+    --flash-error-border: #AB3121;
+    --flash-error-color: #CE3B27;
+    --flash-error-background-color: #F5D1CC;
+    --flash-message-border: #A9A90F;
+    --flash-message-color: #A9A90F;
+    --flash-message-background-color: #FAFAC6;
+    --addToDoInput-color: #E54138;
+}
+
+.Europa {
+    --background-color: #4F345A;
+    --text-color: #C9F299;
+    --accent-button-color-1: #9CBFA7;
+    --accent-button-color-1-hover: #8FA998;
+    --accent-button-color-2: #D6CFDD;
+    --hover-color: #C9B1D2;
+    --shadow-color: 139,226,39;
+    --flash-error-border: #35453B;
+    --flash-error-color: #475C4F;
+    --flash-error-background-color: #C5D3CA;
+    --flash-message-border: #406C0E;
+    --flash-message-color: #4B7E10;
+    --flash-message-background-color: #CFF3A5;
+    --addToDoInput-color: #4F345A;
+}
+
+.Terracotta {
+    --background-color: #EEE0CB;
+    --text-color: #280003;
+    --accent-button-color-1: #D2A49D;
+    --accent-button-color-1-hover: #C2847A;
+    --accent-button-color-2: #BAA898;
+    --hover-color: #DCBF93;
+    --shadow-color: 72,44,40;
+    --flash-error-border: #493D31;
+    --flash-error-color: #6E5B49;
+    --flash-error-background-color: #D6CCC2;
+    --flash-message-border: #703B33;
+    --flash-message-color: #8C4A40;
+    --flash-message-background-color: #D8B1AB;
+    --addToDoInput-color: #280003;
+}
+
+.Galaxy {
+    --background-color: #7067CF;
+    --text-color: #330C2F;
+    --accent-button-color-1: #CBF3D2;
+    --accent-button-color-1-hover: #8BE49C;
+    --accent-button-color-2: #7B287D;
+    --hover-color: #B7C0EE;
+    --shadow-color: 40,278,77;
+    --flash-error-border: #4D184E;
+    --flash-error-color: #A937A9;
+    --flash-error-background-color: #F0D1F0;
+    --flash-message-border: #1A742C;
+    --flash-message-color: #229639;
+    --flash-message-background-color: #BCF0C6;
+    --addToDoInput-color: #280003;
+}
+
+.Alice {
+    --background-color: #FEF5EF;
+    --text-color: #584B53;
+    --accent-button-color-1: #D6E3F8;
+    --accent-button-color-1-hover: #B9CFF3;
+    --accent-button-color-2: #CAA5A9;
+    --hover-color: #B9CFF3;
+    --shadow-color: 35,29,77;
+    --flash-error-border: #18448C;
+    --flash-error-color: #1E55AE;
+    --flash-error-background-color: #CBDBF6;
+    --flash-message-border: #613B19;
+    --flash-message-color: #925826;
+    --flash-message-background-color: #EACAAE;
+    --addToDoInput-color: #584B53;
+}
+
+.Summer {
+    --background-color: #FEF9EF;
+    --text-color: #227C9D;
+    --accent-button-color-1: #FE9A9D;
+    --accent-button-color-1-hover: #FE6D73;
+    --accent-button-color-2: #FFCB77;
+    --hover-color: #91F2E8;
+    --shadow-color: 33,119,151;
+    --flash-error-border: #A20207;
+    --flash-error-color: #B60208;
+    --flash-error-background-color: #FEAEB1;
+    --flash-message-border: #523200;
+    --flash-message-color: #A36500;
+    --flash-message-background-color: #FFE0AD;
+    --addToDoInput-color: #227C9D;
+}
+
+.fixedTopLeft {
+    position: fixed;
+    left: 15px;
+    top: 15px;
+    z-index: 1;
+
+}
+
+.fixedUsername {
+    font-size: 20px;
+}
+
+.dropdown {
+    transform: rotate(0deg);
+    font-size: 15px;
+    height: 20px;
+    width: 20px;
+    border: none;
+    background-color: transparent;
+}
+
+.dropdown.dropdownOpen {
+    font-size: 16px;
+}
+
+.dropdownList {
+    z-index: 1;
+    border: 1px solid black;
+    margin-top: 5px;
+    display: none;
+    
+}
+
+.dropdownList.dropdownOpen {
+    display: block;
+}
+
+.dropdownList a {
+    display: block;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    padding: 15px 50px 15px 15px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.dropdownList a:hover {
+    background-color: #EEEEEE;
+}
+
+.list {
+    border: 1px solid transparent;
+    width: 70%;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 10px 10px rgba(var(--shadow-color), 0.10);
+    margin: 50px auto 10px auto;
+    background-color: var(--background-color);
+}
+
+.deleteListContain {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+}
+
+.deleteList {
+    padding: 10px 15px 10px 15px;
+    background-color: var(--background-color);
+    margin: 15px 30px 30px 0px;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+   
+}
+
+.deleteList:hover {
+    background-color: var(--hover-color);
+    cursor: pointer;
+}
+
+.listTitle {
+    font-weight: bold;
+    font-size: 40px;
+    border: 1px solid transparent;
+    margin: 30px 15px 15px 30px;
+    width: calc(100% - 30px);
+    box-sizing: border-box;
+    color: var(--text-color);
+    background-color: var(--background-color);
+
+}
+
+.listTitle:focus {
+    outline: none;
+}
+
+.addToDoContain {
+    margin: 0px 30px 0px 30px;
+    position: relative;
+
+}
+
+.addToDoBtn {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    border: 1px solid var(--text-color);
+    background-color: var(--accent-button-color-1);
+    width: 10%;
+    color: var(--text-color);
+    box-sizing: border-box;
+}
+
+.addToDoBtn:hover {
+    background-color: var(--accent-button-color-1-hover);
+    cursor: pointer;
+}
+
+.addToDoInput {
+    height: 100%;
+    font-size: 18px;
+    padding: 5px;
+    width: 90%;
+    box-sizing: border-box;
+    border: 1px solid var(--text-color);
+    border-right: none;
+    color: var(--addToDoInput-color);
+
+}
+
+.taskList {
+    list-style-type: none;
+}
+
+.taskList li {
+    margin: 0px 80px 0px 0px;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.toDoContain {
+    width: 92%;
+    display: flex;
+    flex-direction: row;
+}
+
+.toDoContain label {
+    color: var(--text-color);
+}
+
+.toDoCheckbox {
+    align-self: flex-start;
+    margin-right: 15px;
+    margin-top: 5px;
+}
+
+.removeToDoBtn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-color: var(--accent-button-color-2);
+    height: 20px;
+    width: 20px;
+    background-size: 20px 20px;
+    border: none;
+    color: var(--text-color);
+    border-radius: 100%;
+}
+
+.removeToDoBtn:hover {
+    cursor: pointer;
+}
+
+.toDos {
+    padding-top: 50px;
+    padding-bottom: 70px;
+}
+
+.toDoContain label {
+    line-height: 24px;
+    width: calc(100% - 35px);
+    word-wrap: break-word;
+}
+
+
+.theme {
+    margin: 10px 200px 10px 200px;
+}
+
+.theme h1 {
+    padding-bottom: 20px;
+    padding-top: 65px;
+    border-bottom: 1px solid black;
+}
+
+.colorArray {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid black;
+    height: 100px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.color1 {
+    border-right: 1px solid black;
+    box-sizing: border-box;
+    background-color: var(--background-color);
+    flex: 1;
+}
+
+.color2 {
+    border-right: 1px solid black;
+    box-sizing: border-box;
+    background-color: var(--text-color);
+    flex: 1;
+}
+
+.color3 {
+    border-right: 1px solid black;
+    box-sizing: border-box;
+    background-color: var(--accent-button-color-1);
+    flex: 1;
+}
+
+.color4 {
+    border-right: 1px solid black;
+    box-sizing: border-box;
+    background-color: var(--accent-button-color-2);
+    flex: 1;
+}
+
+.color5 {
+    box-sizing: border-box;
+    background-color: var(--hover-color);
+    flex: 1;
+}
