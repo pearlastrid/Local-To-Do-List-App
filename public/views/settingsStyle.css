@@ -1,0 +1,163 @@
+
+html {
+    height: 100%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+* {
+    font-family: inherit;
+}
+
+body {
+    height: 100%;
+    margin-top: 100px;
+}
+
+.setting {
+    margin: 10px 200px 10px 200px;
+}
+
+.setting h1 {
+    padding-bottom: 20px;
+    border-bottom: 1px solid black;
+}
+
+.fixedTopLeft {
+    position: fixed;
+    left: 15px;
+    top: 15px;
+    z-index: 1;
+
+}
+
+.fixedUsername {
+    font-size: 20px;
+}
+
+.dropdown {
+    transform: rotate(0deg);
+    font-size: 15px;
+    height: 20px;
+    width: 20px;
+    border: none;
+    background-color: transparent;
+}
+
+.dropdown.dropdownOpen {
+    font-size: 16px;
+}
+
+.dropdownList {
+    z-index: 1;
+    border: 1px solid black;
+    margin-top: 5px;
+    display: none;
+    
+}
+
+.dropdownList.dropdownOpen {
+    display: block;
+}
+
+.dropdownList a {
+    display: block;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    padding: 15px 50px 15px 15px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.dropdownList a:hover {
+    background-color: #EEEEEE;
+}
+
+.fontOption {
+    display: inline-block;
+    margin: 10px 15px 10px 0px;
+    padding: 15px;
+}
+
+.fontOption.selected {
+    background-color: #EEEEEE;
+}
+
+.fontOption:hover {
+    background-color: #EEEEEE;
+    cursor: pointer;
+}
+
+.dismissFlash {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.dismissFlashError, .flashError {
+    border: 1px solid #DF0000;
+    color:#DF0000;
+    background-color: #FF8E8E;
+}
+
+.flashError {
+    position: relative;
+    width: 70%;
+    margin: 0px auto 25px auto;
+    padding: 15px;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: left;
+    z-index: 1;
+}
+
+.flashError div {
+    width: calc(100% - 100px);
+    word-wrap: break-word;
+}
+
+.popupSetting {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 15px 0px 0px 0px;
+}
+
+.popupSetting input {
+    width: 18px;
+    height: 18px;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.popupSetting label {
+    font-size: 18px;
+}
+
+.themeOption {
+    padding: 15px;
+    display: inline-block;
+    margin: 10px 15px 10px 0px;
+}
+
+.themeOption.selected {
+    background-color: #EEEEEE;
+}
+
+.themeOption:hover {
+    background-color: #EEEEEE;
+}
+
+.bottomRightTriangle {
+    width: 75px;
+    height: 75px;
+    overflow: hidden;
+}
+
+.topLeftTriangle {
+    width: 0;
+    height: 0;
+}

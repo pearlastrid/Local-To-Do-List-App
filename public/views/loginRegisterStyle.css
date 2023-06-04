@@ -1,3 +1,5 @@
+
+
 html {
     height: 100%;
 }
@@ -84,8 +86,45 @@ body {
     background-color: #0058B2;
 }
 
+.dismissFlash {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    box-sizing: border-box;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    cursor: pointer;
+}
+
+.dismissFlashError, .flashError {
+    border: 1px solid #DF0000;
+    color:#DF0000;
+    background-color: #FF8E8E;
+}
+
+.dismissFlashMessage, .flashMessage {
+    border: 1px solid #0E5209;
+    color: #197F12;
+    background-color: #A0E584;
+}
+
+.flashError, .flashMessage {
+    position: relative;
+    width: 500px;
+    margin: 10px auto 10px auto;
+    padding: 15px;
+    box-sizing: border-box;
+    text-align: left;
+    z-index: 1;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.flashError div, .flashMessage div {
+    width: calc(100% - 100px);
+    word-wrap: break-word;
+}
 
 
+/*
 .flashMessage, .flashError {
     width: 500px;
     margin: 10px auto 10px auto;
@@ -105,5 +144,6 @@ body {
     border: 1px solid #8A0202;
     color: #DF0000;
 }
+*/
 
 

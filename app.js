@@ -48,12 +48,16 @@ function register(username, password, confirmPassword) {
                     reject(new Error(`This user already exists.`));
                 }
                 else {
-                    insertUser(username, password).then(() => {
-                        console.log("User successfully inserted");
-                        resolve({
-                            body: {
-                                message: `Successfully registered.`
-                            }
+                    insertUser(username, password).then((response) => {
+                        insertSettings(response.user_id).then(() => {
+                            console.log("User successfully inserted");
+                            resolve({
+                                body: {
+                                    message: `Successfully registered.`
+                                }
+                            });
+                        }).catch((error) => {
+                            reject(new Error(error.message));
                         });
                     }).catch((error) => {
                         reject(new Error(error.message));
@@ -126,7 +130,10 @@ function insertUser(username, password) {
                             reject(new Error(error.message));
                         }
                         else {
-                            resolve("User successfully inserted");
+                            resolve({
+                                message: 'User successfully inserted',
+                                user_id: results.insertId
+                            });
                         }
 
                         connection.release();
@@ -153,6 +160,31 @@ async function genPassword(password) {
     
 }
 
+function insertSettings(user_id) {
+    return new Promise((resolve, reject) => {
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
+            }
+            else {
+                connection.query(`INSERT INTO settings (USER_ID, SHOW_DELETE_LIST_POPUP, FONT_FAMILY, THEME) VALUES (?, 1, "\'Trebuchet MS\'\, \'Lucida Sans Unicode\'\, \'Lucida Grande'\, \'Lucida Sans\'\, Arial\, sans-serif", "Standard")`, [user_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
+                    }
+                    else {
+                        resolve({
+                            message: 'Setting successfully inserted',
+                            setting_id: results.insertId
+                        });
+                    }
+
+                    connection.release();
+                });
+            }
+        });
+    });
+}
 
 function verifyUser(username, password, callback) {
     console.log("inside verify user");
@@ -440,6 +472,115 @@ function updateListTitle(list_id, newTitle) {
     });
 }
 
+function getUserSettings(user_id) {
+    return new Promise((resolve, reject) => {
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
+            }
+            else {
+                connection.query('SELECT * FROM settings WHERE USER_ID=?', [user_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
+                    }
+                    else {
+                        resolve(results[0]);
+                    }
+
+                    connection.release();
+                });
+            }
+        });
+    });
+}
+
+function changeUserDeleteListPopupPreference(user_id, show_popup) {
+    return new Promise((resolve, reject) => {
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
+            }
+            else {
+                connection.query('UPDATE settings SET SHOW_DELETE_LIST_POPUP=? WHERE USER_ID=?', [show_popup, user_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
+                    }
+                    else {
+                        console.log('here');
+                        resolve({
+                            
+                            body: {
+                                message: 'User delete list popup preference successfully updated',
+                                updated_show_popup: show_popup
+                            }
+                        });
+                    }
+
+                    connection.release();
+                });
+            }
+        });
+    });
+}
+
+function changeUserFont(user_id, new_font) {
+    return new Promise((resolve, reject) => {
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
+            }
+            else {
+                connection.query('UPDATE settings SET FONT_FAMILY=? WHERE USER_ID=?', [new_font, user_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
+                    }
+                    else {
+                        resolve({
+                            body: {
+                                message: 'Font successfully updated.',
+                                new_font: new_font
+                            }
+                        });
+                    }
+
+                    connection.release();
+                });
+            }
+        });
+    });
+}
+
+function changeUserTheme(user_id, new_theme) {
+    return new Promise((resolve, reject) => {
+        connectionPool.getConnection((err, connection) => {
+            if (err) {
+                connection.release();
+                reject(new Error(err.message));
+            }
+            else {
+                connection.query('UPDATE settings SET THEME=? WHERE USER_ID=?', [new_theme, user_id], function(error, results, fields) {
+                    if (error) {
+                        reject(new Error(error.message));
+                    }
+                    else {
+                        resolve({
+                            body: {
+                                message: 'Theme successfully updated.',
+                                new_theme: new_theme
+                            }
+                        });
+                    }
+
+                    connection.release();
+                });
+            }
+        });
+    });
+}
+
 
 /***************** PASSPORT.JS *************************/
 
@@ -452,7 +593,7 @@ passport.serializeUser((user, callback) => {
     console.log("Inside serialize");
     console.log(user);
     process.nextTick(() => {
-        return callback(null, user.id);
+        return callback(null, {id: user.id, username: user.username});
     });
 });
 
@@ -509,11 +650,11 @@ app.get('/register', (req, res, next) => {
 });
 
 app.get('/landing', isAuth, (req, res, next) => {
-    getUserToDos(req.user, '␜', '␝').then((response) => {
+    getUserToDos(req.user.id, '␜', '␝').then((response) => {
         console.dir(response, {depth: null});
-        return res.render('landing.ejs', {flashError: [], userToDos: response});
+        return res.render('landing.ejs', {flashError: [], userToDos: response, username: req.user.username});
     }).catch((error) => {
-        return res.render('landing.ejs', {flashError: [error.message], userToDos: []});
+        return res.render('landing.ejs', {flashError: [error.message], userToDos: [], username: req.user.username});
     });
 });
 
@@ -525,6 +666,30 @@ app.get('/logout', (req, res, next) => {
         }
         req.flash('message', 'You are now logged out.');
         res.redirect('/login');
+    });
+});
+
+app.get('/userSettings', isAuth, (req, res, next) => {
+    getUserSettings(req.user.id).then((response) => {
+        return res.send({
+            success: true,
+            body: response
+        });
+    }).catch((error) => {
+        return res.send({
+            success: false,
+            body: {
+                message: error.message
+            }
+        });
+    });
+});
+
+app.get('/settings', isAuth, (req, res, next) => {
+    getUserSettings(req.user.id).then((response) => {
+        res.render('settings.ejs', {settings: response, flashError: [], username: req.user.username});
+    }).catch((error) => {
+        res.render('settings.ejs', {settings: [], flashError: [error.message], username: req.user.username});
     });
 });
 
@@ -575,7 +740,7 @@ app.post('/addToDo', isAuth, (req, res) => {
 
 
 app.post('/addList', isAuth, (req, res) => {
-    addList(req.body.name, req.user).then((response) => {
+    addList(req.body.name, req.user.id).then((response) => {
         return res.send({
             success: true,
             body: response.body
@@ -641,6 +806,56 @@ app.post('/updateToDoCheckbox', isAuth, (req, res) => {
 
 app.post('/updateListTitle', isAuth, (req, res) => {
     updateListTitle(req.body.id, req.body.newTitle).then((response) => {
+        return res.send({
+            success: true,
+            body: response.body
+        });
+    }).catch((error) => {
+        return res.send({
+            success: false,
+            body: {
+                message: error.message
+            }
+        });
+    });
+});
+
+app.post('/changeUserDeleteListPopupPreference', isAuth, (req, res) => {
+    changeUserDeleteListPopupPreference(req.user.id, req.body.show_popup).then((response) => {
+        return res.send({
+            success: true,
+            body: response.body
+        });
+    }).catch((error) => {
+        return res.send({
+            success: false,
+            body: {
+                message: error.message
+            }
+        });
+    });
+});
+
+app.post('/changeFont', isAuth, (req, res) => {
+    console.log(req.body);
+    changeUserFont(req.user.id, req.body.font_family).then((response) => {
+        return res.send({
+            success: true,
+            body: response.body
+        });
+    }).catch((error) => {
+        return res.send({
+            success: false,
+            body: {
+                message: error.message
+            }
+        });
+    });
+});
+
+app.post('/changeTheme', isAuth, (req, res) => {
+    console.log(req.body);
+    changeUserTheme(req.user.id, req.body.theme).then((response) => {
         return res.send({
             success: true,
             body: response.body

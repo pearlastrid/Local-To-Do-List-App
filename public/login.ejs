@@ -31,13 +31,15 @@
         <div id="flashDiv">
             <% for (let i = 0; i < flashError.length; i++) { %>
                 <div class="flashError">
-                    <%= flashError[i] %>
+                    <div><%= flashError[i] %></div>
+                    <input type="button" class="dismissFlash dismissFlashError" value="Dismiss">
                 </div>
             <% } %>
 
             <% for (let i = 0; i < flashMessage.length; i++) { %>
                 <div class="flashMessage">
-                    <%= flashMessage[i] %>
+                    <div><%= flashMessage[i] %></div>
+                    <input type="button" class="dismissFlash dismissFlashMessage" value="Dismiss">
                 </div>
             <% } %>
         </div>
@@ -56,6 +58,11 @@
                         $(password).prop('type', 'password');
                         $(this).html('Show')
                     }
+                });
+
+                $(document).on('click', '.dismissFlash', function(e) {
+                    e.preventDefault();
+                    $(this).closest('div').remove();
                 });
             });
         </script>

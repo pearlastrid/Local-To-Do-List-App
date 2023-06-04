@@ -14,7 +14,7 @@
                 <div class="registerBox">
                     <h1>Register</h1>
                     <form action="/register" method="POST" id="registrationForm">
-                        <input type="text" name="username" placeholder="Username" required><br>
+                        <input type="text" name="username" placeholder="Username" required maxlength="20"><br>
                         <div class="passwordContainer">
                             <input type="password" name="password" autocomplete="new-password" id="new-password" placeholder="Password" required><br>
                             <i class="showPassword">Show</i>
@@ -51,6 +51,11 @@
                     }
                 });
 
+                $(document).on('click', '.dismissFlash', function(e) {
+                    e.preventDefault();
+                    $(this).closest('div').remove();
+                });
+
 
                 $("#registrationForm").ajaxForm({
                     url: '/register',
@@ -58,14 +63,14 @@
                     // we want the response message, flashMessage for success and flashError for failure
                     success: function(response) {
                         if (response.success) {
-                            $('#flashDiv').append(`<div class="flashMessage">${response.body.message}</div>`);
+                            $('#flashDiv').append(`<div class="flashMessage"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashMessage" value="Dismiss"></div>`)
                         }
                         else {
-                            $('#flashDiv').append(`<div class="flashError">${response.body.message}</div>`);
+                            $("#flashDiv").append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`)
                         }
                     },
                     error: function() {
-                        $('#flashDiv').append(`<div class="flashError">Something went wrong.</div>`);
+                        $("#flashDiv").append(`<div class="flashError"><div>Something went wrong.</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`)
                     }
                         
                 });

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="settingsStyle.css">
+    </head>
+    <body>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        
+        <div class="fixedTopLeft">
+            <div class="fixedUsername">
+                <%=username%>
+                <input type="button" class="dropdown" value="▼">
+            </div>
+            <div class="dropdownList">
+                <a href="/landing">My Tasks</a>
+                <a href="/settings">Settings</a>
+                <a href="/explore-themes">Explore Themes</a>
+                <a href="/logout">Log out</a>
+            </div>
+        </div>
+
+        <div class="setting">
+            <h1>Appearance</h1>
+            <div>
+                <h3>Font</h6>
+                <% let fonts = [`'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif`, `'Courier New', Courier, monospace`, `'Times New Roman', Times, serif`,
+                                `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, `'Papyrus', fantasy`, `'Cambria', Cochin, Georgia, Times, 'Times New Roman', serif`, `'Verdana', Geneva, Tahoma, sans-serif`,
+                                `'Georgia', 'Times New Roman', Times, serif`, `'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif`, `'Arial', Helvetica, sans-serif`] %>
+                <% for (let i = 0; i < fonts.length; i++) { %>
+                    <div style="font-family: <%=fonts[i]%>;" data-value="<%=fonts[i]%>" class="<%=(settings.FONT_FAMILY == fonts[i]) ? 'fontOption selected' : 'fontOption'%>"><%=fonts[i].substring(fonts[i].indexOf(`'`) + 1, fonts[i].indexOf(',') - 1)%></div>
+                <% } %>
+            </div>
+            <div>
+                <h3>Theme</h3>
+                <% let themes = [
+                    {
+                        name: 'Standard',
+                        display_color_1: 'white',
+                        display_color_2: '#0067D0',
+                        border_color: 'black'
+                    },
+                    {
+                        name: 'Tropical',
+                        display_color_1: '#7FD8BE',
+                        display_color_2: '#FCEFEF',
+                        border_color: '#4F2D02'
+                    },
+                    {
+                        name: 'Midnight',
+                        display_color_1: '#313D5A',
+                        display_color_2: '#F2F0FA',
+                        border_color: '#183642'
+                    },
+                    {
+                        name: 'Aurora',
+                        display_color_1: '#91C4F2',
+                        display_color_2: '#8CA0D7',
+                        border_color: '#7E1F86'
+                    },
+                    {
+                        name: 'Lemonade',
+                        display_color_1: '#EF8681',
+                        display_color_2: '#F8F5C9',
+                        border_color: '#E54138'
+                    },
+                    {
+                        name: 'Europa',
+                        display_color_1: '#4F345A',
+                        display_color_2: '#C9F299',
+                        border_color: '#9CBFA7'
+                    },
+                    {
+                        name: 'Terracotta',
+                        display_color_1: '#EEE0CB',
+                        display_color_2: '#D2A49D',
+                        border_color: '#280003'
+                    },
+                    {
+                        name: 'Galaxy',
+                        display_color_1: '#7067CF',
+                        display_color_2: '#CBF3D2',
+                        border_color: '#330C2F'
+                    },
+                    {
+                        name: 'Alice',
+                        display_color_1: '#FEF5EF',
+                        display_color_2: '#D6E3F8',
+                        border_color: '#584B53'
+                    },
+                    {
+                        name: 'Summer',
+                        display_color_1: '#FEF9EF',
+                        display_color_2: '#FE6D73',
+                        border_color: '#227C9D'
+                    }
+                ]; %>
+                <% for (let i = 0; i < themes.length; i++) { %>
+                    <div class="<%=(settings.THEME == themes[i].name) ? 'themeOption selected' : 'themeOption'%>" data-value="<%=themes[i].name%>">
+                        <div class="bottomRightTriangle" style="border: 1px solid <%=themes[i].border_color%>; background-color: <%=themes[i].display_color_2%>;">
+                            <div class="topLeftTriangle" style="border-top: 75px solid <%=themes[i].display_color_1%>; border-right: 75px solid transparent;"></div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="setting">
+            <h1>Popups</h1>
+            <div>
+                <li class="popupSetting">
+                    <% if (settings.SHOW_DELETE_LIST_POPUP == 1) { %>
+                        <input name="deleteListPopupPreference" type="checkbox" id="deleteListPopupPreference" checked>
+                    <% } else { %>
+                        <input name="deleteListPopupPreference" type="checkbox" id="deleteListPopupPreference">
+                    <% } %>
+                    <label for="deleteListPopupPreference">Popup on delete list</label>
+                </li>
+            </div>
+        </div>
+
+        <div id="flashDiv">
+            <% for (let i = 0; i < flashError.length; i++) { %>
+                <div class="flashError">
+                    <div><%= flashError[i] %></div>
+                    <input type="button" class="dismissFlash dismissFlashError" value="Dismiss">
+                </div>
+            <% } %>
+        </div>
+
+        <script>
+            $(document).ready(function() {
+
+                function errorHandler(xhr) {
+                    if (xhr.status === 401) {
+                        location.href = '/login';
+                    }
+                    else if (xhr.status === 404) {
+                        document.body.innerHTML = xhr.responseText;
+                    }
+                    else {
+                        $("#flashDiv").append(`<div class="flashError"><div>Something went wrong.</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
+                    }
+                }
+
+
+                $(document).on('click', '.dropdown', function(e) {
+                    e.preventDefault();
+
+                    if ($('.dropdown').hasClass('dropdownOpen')) {
+                        $('.dropdown').removeClass('dropdownOpen');
+                        $('.dropdownList').removeClass('dropdownOpen');
+                        $('.dropdown').val('▼');
+                    }
+                    else {
+                        $('.dropdown').addClass('dropdownOpen');
+                        $('.dropdownList').addClass('dropdownOpen');
+                        $('.dropdown').val('▲');
+                    }
+                });
+
+                $(document).on('click', '.fontOption', function(e) {
+                    e.preventDefault();
+
+                    let div = $(this);
+
+                    if (!div.hasClass('selected')) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/changeFont',
+                            data: {
+                                font_family: div.data().value
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    $('.fontOption.selected').removeClass('selected');
+                                    div.addClass('selected');
+                                }
+                                else {
+                                    $('#flashDiv').append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
+                                }
+                            },
+                            error: errorHandler
+                        });
+                    }
+                });
+
+                $(document).on('change', '#deleteListPopupPreference', function(e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/changeUserDeleteListPopupPreference',
+                        data: {
+                            show_popup: (this.checked ? 1 : 0)
+                        },
+                        success: function(response) {
+                            if (!response.success) {
+                                $("#flashDiv").append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
+                            }
+                        },
+                        error: errorHandler
+                    });
+                });
+
+                $(document).on('click', '.themeOption', function(e) {
+                    e.preventDefault();
+
+                    let div = $(this);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/changeTheme',
+                        data: {
+                            theme: div.data().value
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                $('.themeOption.selected').removeClass('selected');
+                                div.addClass('selected');
+                            }
+                            else {
+                                $('#flashDiv').append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
+                            }
+                        },
+                        error: errorHandler
+                    });
+                });
+                
+            });
+        </script>
+    </body>
+</html>

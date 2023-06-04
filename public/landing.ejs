@@ -14,11 +14,38 @@
             <a href="/logout" id="logoutBtn">Log out</a><br>
         </div>
 
+        <div class="fixedTopLeft">
+            <div class="fixedUsername">
+                <%=username%>
+                <input type="button" class="dropdown" value="▼">
+            </div>
+            <div class="dropdownList">
+                <a href="/landing">My Tasks</a>
+                <a href="/settings">Settings</a>
+                <a href="/explore-themes">Explore Themes</a>
+                <a href="/logout">Log out</a>
+            </div>
+        </div>
+
+        <div id="overlay">
+            <div class="deleteListPopup">
+                You are about to delete this entire list. Are you sure you want to do this?
+                <div class="popupButtons">
+                    <input type="button" id="confirmDeleteList" value="Yes">
+                    <input type="button" id="undoDeleteList" value="No">
+                </div>
+                <li>
+                    <input id="deleteListPopupPreference" type="checkbox" name="deleteListPopupPreference">
+                    <label for="deleteListPopupPreference">Do not show this again.</label>
+                </li>
+
+            </div>
+        </div>
+
         <div class="toDos">
             <% for (let i = 0; i < userToDos.length; i++) { %>
                 <div class="list" id="list<%=userToDos[i].ID%>">
                     <input type="text" class="listTitle" value="<%=userToDos[i].NAME%>">
-                    <input type="button" class="deleteList">
                     <form action="/addToDo" method="POST" class="addToDoContain">
                         <input type="text" name="task" placeholder="Todo" class="addToDoInput">
                         <input type="submit" class="addToDoBtn" value="Add">
@@ -35,18 +62,30 @@
                                         <label for="isDone" style="text-decoration: none;"><%=userToDos[i].listToDos[k].task%></label>
                                     <% } %>
                                 </div>
-                                <input type="button" class="removeToDoBtn">
+                                <input type="button" class="removeToDoBtn" value="×">
                             </li>
                         <% } %>
                     </ul>
+                    <div class="deleteListContain">
+                        <input type="button" class="deleteList" value="Delete">
+                    </div>
                 </div>
             <% } %>
         </div>
 
         <div id="flashDiv">
+            <div class="flashError">
+                <div>This is a Test</div>
+                <input type="button" class="dismissFlash dismissFlashError" value="Dismiss">
+            </div>
+            <div class="flashMessage">
+                <div>This is a Test</div>
+                <input type="button" class="dismissFlash dismissFlashMessage" value="Dismiss">
+            </div>
             <% for (let i = 0; i < flashError.length; i++) { %>
                 <div class="flashError">
-                    <%= flashError[i] %>
+                    <div><%= flashError[i] %></div>
+                    <input type="button" class="dismissFlash dismissFlashError" value="Dismiss">
                 </div>
             <% } %>
         </div>
@@ -55,6 +94,26 @@
         <script>
             $(document).ready(function() {
 
+                let settings = {};
+        
+                $.ajax({
+                    type: 'GET',
+                    url: '/userSettings',
+                    success: function(response) {
+                        if (response.success) {
+                            settings.showDeleteListPopup = response.body.SHOW_DELETE_LIST_POPUP;
+                            settings.fontFamily = response.body.FONT_FAMILY;
+                            settings.theme = response.body.THEME;
+
+                            $('body').addClass(settings.theme);
+                            $('*').css('font-family', settings.fontFamily);
+                        }
+                        else {
+                            $('#flashDiv').append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
+                        }
+                    },
+                    error: errorHandler
+                });
 
                 function errorHandler(xhr) {
                     if (xhr.status === 401) {
@@ -64,7 +123,7 @@
                         document.body.innerHTML = xhr.responseText;
                     }
                     else {
-                        $("#flashDiv").append(`<div class="flashError">Something went wrong.</div>`);
+                        $("#flashDiv").append(`<div class="flashError"><div>Something went wrong.</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
                     }
                 }
 
@@ -78,13 +137,62 @@
                         },
                         success: function(response) {
                             if (!response.success) {
-                                $('#flashDiv').append(`<div class="flashError">${response.body.message}</div>`);
+                                $('#flashDiv').append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
                             }
                         },
                         error: errorHandler
                     });
                     
                 }
+
+                function deleteList(div) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/deleteList',
+                        data: {
+                            id: div.attr('id').substring('list'.length)
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                div.remove();
+                            }
+                            else {
+                                $("#flashDiv").append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
+                            }
+                        },
+                        error: errorHandler
+                    });
+                }
+
+                function updateDeleteListPopupPreference(show_popup) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/changeUserDeleteListPopupPreference',
+                        data: {
+                            show_popup: show_popup
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                settings.showDeleteListPopup = response.body.updated_show_popup;
+                                if (response.body.updated_show_popup == 1) {
+                                    $('#flashDiv').append('<div class="flashMessage"><div>Popup enabled. You can always change your popup preferences in the Settings tab of your user profile.</div><input type="button" class="dismissFlash dismissFlashMessage" value="Dismiss"></div>');
+                                }
+                                else {
+                                    $('#flashDiv').append('<div class="flashMessage"><div>We will not show you this popup again! You can always change your popup preferences in the Settings tab of your user profile.</div><input type="button" class="dismissFlash dismissFlashMessage" value="Dismiss"></div>');
+                                }
+                            }
+                            else {
+                                $("#flashDiv").append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
+                            }
+                        },
+                        error: errorHandler
+                    });
+                }
+
+                $(document).on('click', '.dismissFlash', function(e) {
+                    e.preventDefault();
+                    $(this).closest('div').remove();
+                });
 
                 $(document).on('click', '.addToDoBtn', function(e) {
                     e.preventDefault();
@@ -106,12 +214,13 @@
                                 toDoContain.append('<input type="checkbox" class="toDoCheckbox" name="isDone">');
                                 toDoContain.append(`<label for="isDone">${response.body.task}</label>`);
                                 task.append(toDoContain);
-                                task.append('<input type="button" class="removeToDoBtn">');
+                                task.append('<input type="button" class="removeToDoBtn" value="×">');
+                                task.css('font-family', settings.fontFamily);
 
                                 form.next('.taskList').append(task);
                             }
                             else {
-                                $("#flashDiv").append(`<div class="flashError">${response.body.message}</div>`);
+                                $("#flashDiv").append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
                             }
                             
                         },
@@ -138,14 +247,15 @@
 
                                 let div = $('<div></div>').attr('class', 'list').attr('id', `list${response.body.id}`);
                                 div.append(`<input type="text" class="listTitle" value="Untitled">`);
-                                div.append('<input type="button" class="deleteList">');
                                 div.append(form);
                                 div.append('<ul class="taskList"></ul>');
+                                div.append('<div class="deleteListContain"><input type="button" class="deleteList" value="Delete"></div>');
+                                div.css('font-family', settings.fontFamily);
 
                                 $('.toDos').append(div);
                             }
                             else {
-                                $("#flashDiv").append(`<div class="flashError">${response.body.message}</div>`);
+                                $("#flashDiv").append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
                             }
                             
                         },
@@ -156,24 +266,36 @@
                 
                 $(document).on('click', '.deleteList', function(e) {
                     e.preventDefault();
-                    let div = $(this).closest('div');
+                    let div = $(this).closest('.list');
 
-                    $.ajax({
-                        type: 'POST',
-                        url: '/deleteList',
-                        data: {
-                            id: div.attr('id').substring('list'.length)
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                div.remove();
+                    if (settings.showDeleteListPopup == 1) {
+                        $('#overlay').css('display', 'flex');
+
+                        $(document).on('click', '#confirmDeleteList', function(e) {
+                            e.preventDefault();
+                            $('#overlay').css('display', 'none');
+                            deleteList(div);
+
+                            if ($('#deleteListPopupPreference').is(':checked')) {
+                                updateDeleteListPopupPreference(0);
                             }
-                            else {
-                                $("#flashDiv").append(`<div class="flashError">${response.body.message}</div>`);
+                        });
+
+                        $(document).on('click', '#undoDeleteList', function(e) {
+                            e.preventDefault();
+                            $('#overlay').css('display', 'none');
+
+                            if ($('#deleteListPopupPreference').is(':checked')) {
+                                updateDeleteListPopupPreference(0);
                             }
-                        },
-                        error: errorHandler
-                    });
+                        });
+                    }
+                    else {
+                        deleteList(div);
+                    }
+
+                    
+
                 });
 
                 $(document).on('click', '.removeToDoBtn', function(e) {
@@ -191,7 +313,7 @@
                                 li.remove();
                             }
                             else {
-                                $("#flashDiv").append(`div class="flashError">${response.body.message}</div>`);
+                                $("#flashDiv").append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
                             }
                         },
                         error: errorHandler
@@ -201,7 +323,6 @@
 
                 $(document).on('change', '.toDoCheckbox', function(e) {
                     e.preventDefault();
-
                     let li = $(this).closest('li');
 
                     if (this.checked) {
@@ -220,11 +341,26 @@
                         },
                         success: function(response) {
                             if (!response.success) {
-                                $("#flashDiv").append(`<div class="flashError">${response.body.message}</div>`);
+                                $("#flashDiv").append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
                             }
                         },
                         error: errorHandler
                     });
+                });
+
+                $(document).on('click', '.dropdown', function(e) {
+                    e.preventDefault();
+
+                    if ($('.dropdown').hasClass('dropdownOpen')) {
+                        $('.dropdown').removeClass('dropdownOpen');
+                        $('.dropdownList').removeClass('dropdownOpen');
+                        $('.dropdown').val('▼');
+                    }
+                    else {
+                        $('.dropdown').addClass('dropdownOpen');
+                        $('.dropdownList').addClass('dropdownOpen');
+                        $('.dropdown').val('▲');
+                    }
                 });
                 
                 let timeoutID;
