@@ -41,16 +41,13 @@ function register(username, password, confirmPassword) {
         }
         else {
             userExists(username).then((response) => {
-                console.log(response);
                 
                 if (response) {
-                    console.log("User already exists");
                     reject(new Error(`This user already exists.`));
                 }
                 else {
                     insertUser(username, password).then((response) => {
                         insertSettings(response.user_id).then(() => {
-                            console.log("User successfully inserted");
                             resolve({
                                 body: {
                                     message: `Successfully registered.`
@@ -89,7 +86,6 @@ function userExists(username) {
 }
 
 function findUser(username) {
-    console.log("inside find user");
     return new Promise((resolve, reject) => {
         connectionPool.getConnection((err, connection) => {
             if (err) {
@@ -187,7 +183,6 @@ function insertSettings(user_id) {
 }
 
 function verifyUser(username, password, callback) {
-    console.log("inside verify user");
     findUser(username).then((response) => {
         if (response.length === 0) {
             return callback(null, false, {message: 'Incorrect username or password.'});
@@ -218,7 +213,6 @@ function verifyUser(username, password, callback) {
 
 
 async function verifyPassword(password, salt, hash) {
-    console.log("inside verify password");
     const hashVerify = await bcrypt.hash(password, salt);
     return hash === hashVerify;
 }
@@ -508,7 +502,6 @@ function changeUserDeleteListPopupPreference(user_id, show_popup) {
                         reject(new Error(error.message));
                     }
                     else {
-                        console.log('here');
                         resolve({
                             
                             body: {
@@ -590,15 +583,12 @@ passport.use(strategy);
 
 
 passport.serializeUser((user, callback) => {
-    console.log("Inside serialize");
-    console.log(user);
     process.nextTick(() => {
         return callback(null, {id: user.id, username: user.username});
     });
 });
 
 passport.deserializeUser((user, callback) => {
-    console.log("Inside deserialize user");
     process.nextTick(() => {
         return callback(null, user);
     });
@@ -626,16 +616,9 @@ app.use(passport.session());
 app.use(flash());
 
 
-app.use((req, res, next) => {
-    console.log(req.session);
-    console.log(req.user);
-    next();
-});
-
 /******************** ROUTES *******************/
 
 app.get('/', (req, res, next) => {
-    console.log(req.session.id);
     res.sendFile(__dirname + '/public/index.html');
 })
 
@@ -704,11 +687,8 @@ app.post('/login', passport.authenticate('local', {
 }));
 
 app.post('/register', (req, res) => {
-    console.log(req.body);
     
     register(req.body.username, req.body.password, req.body.confirmPassword).then((response) => {
-        console.log(response);
-        
         return res.send({
             success: true,
             body: response.body
@@ -726,7 +706,6 @@ app.post('/register', (req, res) => {
 });
 
 app.post('/addToDo', isAuth, (req, res) => {
-    console.log(req.body);
     addToDo(req.body.task, req.body.list_id).then((response) => {
         return res.send({
             success: true,
@@ -776,7 +755,6 @@ app.post('/deleteList', isAuth, (req, res) => {
 });
 
 app.post('/removeToDo', isAuth, (req, res) => {
-    console.log(req.body);
     removeToDo(req.body.id).then((response) => {
         return res.send({
             success: true,
@@ -841,7 +819,6 @@ app.post('/changeUserDeleteListPopupPreference', isAuth, (req, res) => {
 });
 
 app.post('/changeFont', isAuth, (req, res) => {
-    console.log(req.body);
     changeUserFont(req.user.id, req.body.font_family).then((response) => {
         return res.send({
             success: true,
@@ -858,7 +835,6 @@ app.post('/changeFont', isAuth, (req, res) => {
 });
 
 app.post('/changeTheme', isAuth, (req, res) => {
-    console.log(req.body);
     changeUserTheme(req.user.id, req.body.theme).then((response) => {
         return res.send({
             success: true,
