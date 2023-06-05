@@ -37,9 +37,7 @@
                 <!-- font setting -->
                 <h3>Font</h6>
                 <!-- display all available fonts -->
-                <% let fonts = [`'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif`, `'Courier New', Courier, monospace`, `'Times New Roman', Times, serif`, %>
-                <%              `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, `'Papyrus', fantasy`, `'Cambria', Cochin, Georgia, Times, 'Times New Roman', serif`, `'Verdana', Geneva, Tahoma, sans-serif`, %>
-                <%              `'Georgia', 'Times New Roman', Times, serif`, `'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif`, `'Arial', Helvetica, sans-serif`] %>
+                <% let fonts = [`'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif`, `'Courier New', Courier, monospace`, `'Times New Roman', Times, serif`, `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, `'Papyrus', fantasy`, `'Cambria', Cochin, Georgia, Times, 'Times New Roman', serif`, `'Verdana', Geneva, Tahoma, sans-serif`, `'Georgia', 'Times New Roman', Times, serif`, `'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif`, `'Arial', Helvetica, sans-serif`] %>
                 <% for (let i = 0; i < fonts.length; i++) { %>
                     <div style="font-family: <%=fonts[i]%>;" data-value="<%=fonts[i]%>" class="<%=(settings.FONT_FAMILY == fonts[i]) ? 'fontOption selected' : 'fontOption'%>"><%=fonts[i].substring(fonts[i].indexOf(`'`) + 1, fonts[i].indexOf(',') - 1)%></div>
                 <% } %>
