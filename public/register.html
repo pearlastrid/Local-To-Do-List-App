@@ -1,3 +1,11 @@
+<!--
+    Pearl Lin
+    6.4.2023
+
+    Register page for creating new user accounts with the To-Do List app
+-->
+
+
 <!DOCTYPE html>
 
 <html>
@@ -9,10 +17,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
         <script src="https://malsup.github.io/jquery.form.js"></script> 
 
+        <!-- register box -->
         <div class="register">
             <div class="registerContain">
                 <div class="registerBox">
                     <h1>Register</h1>
+                    <!-- form for entering username and password to be registered -->
                     <form action="/register" method="POST" id="registrationForm">
                         <input type="text" name="username" placeholder="Username" required maxlength="20"><br>
                         <div class="passwordContainer">
@@ -25,11 +35,13 @@
                         </div>
                         <input type="submit" id="registerBtn" value="Register">
                     </form>
+                    <!-- link to the login page -->
                     <a href="/login">Back to Login</a><br>
                 </div>
             </div>
         </div>
 
+        <!-- div for housing all flash messages -->
         <div id="flashDiv">
 
         </div>
@@ -37,6 +49,7 @@
 
         <script>
             $(document).ready(function() {
+                // shows password when .showPassword toggle is clicked
                 $(document).on('click', '.showPassword', function(e) {
                     e.preventDefault();
 
@@ -51,12 +64,13 @@
                     }
                 });
 
+                // deletes flash message when its dismissal button is clicked
                 $(document).on('click', '.dismissFlash', function(e) {
                     e.preventDefault();
                     $(this).closest('div').remove();
                 });
 
-
+                // registers user when the submit button on the #registrationForm is clicked
                 $("#registrationForm").ajaxForm({
                     url: '/register',
                     datatype: 'json',

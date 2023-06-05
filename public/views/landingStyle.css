@@ -1,3 +1,11 @@
+/*
+    Pearl Lin
+    6.4.2023
+
+    Styling page for landing.ejs
+
+*/
+
 html {
     height: 100%;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
@@ -15,6 +23,8 @@ body {
     background: var(--background-color);
 }
 
+
+/************ THEMES STYLING *************/
 .Standard {
     --text-color: black;
     --background-color: white;
@@ -187,6 +197,10 @@ body {
     --addToDoInput-color: #227C9D;
 }
 
+
+
+/************ LOGOUT AND NEW LIST BUTTONS STYLING *************/
+
 .fixedButtons {
     position: fixed;
     display: flex;
@@ -216,6 +230,7 @@ body {
     cursor: pointer;
 }
 
+/***************** TO-DO LIST STYLING **************/
 
 .list {
     border: 1px solid transparent;
@@ -350,6 +365,8 @@ body {
     word-wrap: break-word;
 }
 
+/********** FLASH MESSAGE STYLING **************/
+
 #flashDiv {
     text-align: center;
     position: fixed;
@@ -391,6 +408,8 @@ body {
     width: calc(100% - 100px);
     word-wrap: break-word;
 }
+
+/***************** DELETE LIST POPUP STYLING ***************/
 
 #overlay {
     position: fixed;
@@ -441,6 +460,8 @@ body {
 .deleteListPopup li label {
     height: 16px;
 }
+
+/******************** USERNAME AND DROPDOWN LIST STYLING **************/
 
 .fixedTopLeft {
     position: fixed;

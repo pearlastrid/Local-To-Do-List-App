@@ -1,3 +1,12 @@
+<!--
+    Pearl Lin
+    6.4.2023
+
+    Primary page for displaying and editing all the user's To-Do Lists
+
+-->
+
+
 <!DOCTYPE html>
 
 <html>
@@ -9,11 +18,13 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
         <script src="https://malsup.github.io/jquery.form.js"></script> 
 
+        <!-- buttons for logging out and adding a new list -->
         <div class="fixedButtons">
             <input type="button" id="addList" value="New List">
             <a href="/logout" id="logoutBtn">Log out</a><br>
         </div>
 
+        <!-- username and dropdown list -->
         <div class="fixedTopLeft">
             <div class="fixedUsername">
                 <%=username%>
@@ -27,6 +38,7 @@
             </div>
         </div>
 
+        <!-- Popup for confirming the user's deletion of a list (can be turned off in settings) -->
         <div id="overlay">
             <div class="deleteListPopup">
                 You are about to delete this entire list. Are you sure you want to do this?
@@ -42,16 +54,22 @@
             </div>
         </div>
 
+        <!-- user's To-Do lists -->
         <div class="toDos">
+            <!-- user's To-Do list data from the serverside is rendered onto page  -->
             <% for (let i = 0; i < userToDos.length; i++) { %>
+                <!-- To-Do list -->
                 <div class="list" id="list<%=userToDos[i].ID%>">
+                    <!-- list title and form for adding a To-Do -->
                     <input type="text" class="listTitle" value="<%=userToDos[i].NAME%>">
                     <form action="/addToDo" method="POST" class="addToDoContain">
                         <input type="text" name="task" placeholder="Todo" class="addToDoInput">
                         <input type="submit" class="addToDoBtn" value="Add">
                     </form>
+                    <!-- ul displaying current To-Dos associated with this list -->
                     <ul class="taskList">
                         <% for (let k = 0; k < userToDos[i].listToDos.length; k++) { %>
+                            <!-- a To-Do -->
                             <li id="task<%=userToDos[i].listToDos[k].todo_id%>">
                                 <div class="toDoContain">
                                     <% if (parseInt(userToDos[i].listToDos[k].is_done) === 1) { %>
@@ -62,10 +80,12 @@
                                         <label for="isDone" style="text-decoration: none;"><%=userToDos[i].listToDos[k].task%></label>
                                     <% } %>
                                 </div>
+                                <!-- remove To-Do button -->
                                 <input type="button" class="removeToDoBtn" value="×">
                             </li>
                         <% } %>
                     </ul>
+                    <!-- delete list button -->
                     <div class="deleteListContain">
                         <input type="button" class="deleteList" value="Delete">
                     </div>
@@ -73,7 +93,9 @@
             <% } %>
         </div>
 
+        <!-- div housing all flash messages -->
         <div id="flashDiv">
+            <!-- display flash errors, if they exist, from the serverside -->
             <% for (let i = 0; i < flashError.length; i++) { %>
                 <div class="flashError">
                     <div><%= flashError[i] %></div>
@@ -87,7 +109,8 @@
             $(document).ready(function() {
 
                 let settings = {};
-        
+                
+                // retrieve all user settings from the serverside and store them in settings object
                 $.ajax({
                     type: 'GET',
                     url: '/userSettings',
@@ -107,6 +130,8 @@
                     error: errorHandler
                 });
 
+
+                // error handler for HTTP errors
                 function errorHandler(xhr) {
                     if (xhr.status === 401) {
                         location.href = '/login';
@@ -119,6 +144,7 @@
                     }
                 }
 
+                // updates title of a To-Do list 
                 function updateListTitle(listTitle, list_id) {
                     $.ajax({
                         type: 'POST',
@@ -137,6 +163,7 @@
                     
                 }
 
+                // deletes a To-Do list
                 function deleteList(div) {
                     $.ajax({
                         type: 'POST',
@@ -156,6 +183,7 @@
                     });
                 }
 
+                // updates user's delete list popup preference setting
                 function updateDeleteListPopupPreference(show_popup) {
                     $.ajax({
                         type: 'POST',
@@ -181,11 +209,14 @@
                     });
                 }
 
+                // deletes flash message when its dismissal button is clicked
                 $(document).on('click', '.dismissFlash', function(e) {
                     e.preventDefault();
                     $(this).closest('div').remove();
                 });
 
+
+                // adds a To-Do when the addToDoBtn buttons are clicked
                 $(document).on('click', '.addToDoBtn', function(e) {
                     e.preventDefault();
                     let form = $(this).closest('form');
@@ -222,6 +253,7 @@
                     
                 });
 
+                // adds a list when the #addList button is clicked
                 $(document).on('click', '#addList', function(e) {
                     e.preventDefault();
                     $.ajax({
@@ -255,6 +287,7 @@
                     });
                 });
                 
+                // deletes a list when its deleteList button is clicked
                 $(document).on('click', '.deleteList', function(e) {
                     e.preventDefault();
                     let div = $(this).closest('.list');
@@ -284,11 +317,9 @@
                     else {
                         deleteList(div);
                     }
-
-                    
-
                 });
 
+                // removes a To-Do when its removeToDoBtn button is clicked
                 $(document).on('click', '.removeToDoBtn', function(e) {
                     e.preventDefault();
                     let li = $(this).closest('li');
@@ -312,6 +343,7 @@
                     });
                 });
 
+                // detects the checking/unchecking of a To-Do and sends an ajax POST request to update the database
                 $(document).on('change', '.toDoCheckbox', function(e) {
                     e.preventDefault();
                     let li = $(this).closest('li');
@@ -339,6 +371,7 @@
                     });
                 });
 
+                // dropdown list opening and closing mechanism
                 $(document).on('click', '.dropdown', function(e) {
                     e.preventDefault();
 
@@ -354,6 +387,7 @@
                     }
                 });
                 
+                // detects a 1 second pause after user types a list title, then sends an ajax POST request to update the database
                 let timeoutID;
                 $(document).on('input', '.listTitle', function(e) {
                     e.preventDefault();

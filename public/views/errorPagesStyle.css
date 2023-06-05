@@ -1,3 +1,11 @@
+/*
+    Pearl Lin
+    6.4.2023
+
+    Styling for error pages (not-authorized.html and not-found.html)
+*/
+
+
 html {
     height: 100%
 }
@@ -12,6 +20,8 @@ body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+/********* ERROR DISPLAY STYLING ************/
+
 .title {
     font-size: 60px;
 }
@@ -20,6 +30,8 @@ body {
     color: gray;
     font-weight: 100;
 }
+
+/************ REDIRECT LINK STYLING **************/
 
 .redirectLink {
     text-decoration: none;

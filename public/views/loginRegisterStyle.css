@@ -1,4 +1,9 @@
+/*
+    Pearl Lin
+    6.4.2023
 
+    Styling for register page and login page
+*/
 
 html {
     height: 100%;
@@ -11,6 +16,8 @@ body {
     flex-direction: column;
     justify-content: center;
 }
+
+/******** LOGIN AND REGISTER BOX STYLING ************/
 
 .login, .register {
     display: flex;
@@ -58,6 +65,8 @@ body {
     position: relative;
 }
 
+/*********** SHOW/HIDE PASSWORD STYLING ***********/
+
 .showPassword {
     position: absolute;
     top: 10px;
@@ -74,6 +83,8 @@ body {
     cursor: pointer;
 }
 
+/********** LOGIN AND REGISTER BUTTONS STYLING ***********/
+
 #loginBtn, #registerBtn {
     margin-top: 40px;
     margin-bottom: 40px;
@@ -85,6 +96,8 @@ body {
 #loginBtn:hover, #registerBtn:hover {
     background-color: #0058B2;
 }
+
+/************* FLASH MESSAGE STYLING ************/
 
 .dismissFlash {
     position: absolute;
@@ -122,28 +135,3 @@ body {
     width: calc(100% - 100px);
     word-wrap: break-word;
 }
-
-
-/*
-.flashMessage, .flashError {
-    width: 500px;
-    margin: 10px auto 10px auto;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-.flashMessage {
-    background-color: #A0E584;
-    color: #197F12;
-    border: 1px solid #0E5209;
-}
-
-.flashError {
-    background-color: #FF8E8E;
-    border: 1px solid #8A0202;
-    color: #DF0000;
-}
-*/
-
-

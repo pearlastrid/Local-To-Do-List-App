@@ -1,3 +1,10 @@
+/*
+    Pearl Lin
+    6.4.2023
+
+    Styling page for settings.ejs
+
+*/
 
 html {
     height: 100%;
@@ -13,6 +20,8 @@ body {
     margin-top: 100px;
 }
 
+/************ SETTINGS STYLING ************/
+
 .setting {
     margin: 10px 200px 10px 200px;
 }
@@ -21,6 +30,8 @@ body {
     padding-bottom: 20px;
     border-bottom: 1px solid black;
 }
+
+/************* USERNAME AND DROPDOWN LIST STYLING ***************/
 
 .fixedTopLeft {
     position: fixed;
@@ -73,6 +84,8 @@ body {
     background-color: #EEEEEE;
 }
 
+/***************** FONT SETTING STYLING ****************/
+
 .fontOption {
     display: inline-block;
     margin: 10px 15px 10px 0px;
@@ -87,6 +100,8 @@ body {
     background-color: #EEEEEE;
     cursor: pointer;
 }
+
+/****************** FLASH MESSAGE STYLING ******************/
 
 .dismissFlash {
     position: absolute;
@@ -118,6 +133,8 @@ body {
     word-wrap: break-word;
 }
 
+/************** POPUP SETTING STYLING *****************/
+
 .popupSetting {
     list-style-type: none;
     display: flex;
@@ -136,6 +153,8 @@ body {
 .popupSetting label {
     font-size: 18px;
 }
+
+/**************** THEME SETTING STYLING ***************/
 
 .themeOption {
     padding: 15px;

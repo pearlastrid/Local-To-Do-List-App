@@ -1,3 +1,12 @@
+/*
+
+    Pearl Lin
+    6.4.2023
+
+    Styling for index.html
+
+*/
+
 html {
     height: 100%;
 }
@@ -9,6 +18,8 @@ body {
     flex-direction: column;
     justify-content: center;
 }
+
+/*********** TITLE STYLING *****************/
 
 .title {
     text-align: center;
@@ -27,9 +38,13 @@ body {
     margin: 30px 20px 40px 20px;
 }
 
+/************ ICON STYLING ****************/
+
 .title img {
     height: 250px;
 }
+
+/**************** LOGIN AND REGISTER BUTTONS STYLING ****************/
 
 .loginRegister {
     display: flex;
@@ -50,35 +65,4 @@ body {
 
 .loginRegister a:hover {
     background-color: #EEEEEE;
-}
-
-@media all and (max-width: 760px) {
-    html {
-        background-color: white;
-    }
-    .title h1 {
-        font-size: 45px;
-        margin-left: 20px;
-        margin-right: 20px;
-    }
-
-    .title h6 {
-        font-size: 15px;
-        line-height: 1.5em;
-        margin: 0px 20px 10px 20px;
-    }
-
-    .title img {
-        height: 225px;
-    }
-
-    .title {
-        margin-bottom: 20px;
-    }
-
-    .loginRegister a {
-        margin: 0px 10px 0px 10px;
-        width: 90px;
-        font-size: 15px;
-    }
 }

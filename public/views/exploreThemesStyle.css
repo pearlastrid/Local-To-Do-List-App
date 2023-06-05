@@ -1,3 +1,12 @@
+/*
+    Pearl Lin
+    6.4.2023
+
+    Styling page for explore-themes.ejs
+
+*/
+
+
 html {
     height: 100%;
 }
@@ -12,6 +21,7 @@ body {
     margin: 0;
 }
 
+/************ THEMES STYLING *************/
 .Standard {
     --text-color: black;
     --background-color: white;
@@ -184,6 +194,8 @@ body {
     --addToDoInput-color: #227C9D;
 }
 
+
+/************** USERNAME AND DROPDOWN LIST STYLING *************/
 .fixedTopLeft {
     position: fixed;
     left: 15px;
@@ -235,6 +247,9 @@ body {
     background-color: #EEEEEE;
 }
 
+
+
+/******************* TO-DO LIST STYLING *****************/
 .list {
     border: 1px solid transparent;
     width: 70%;
@@ -369,6 +384,7 @@ body {
     word-wrap: break-word;
 }
 
+/************* THEME AND COLOR ARRAY STYLING ******************/
 
 .theme {
     margin: 10px 200px 10px 200px;

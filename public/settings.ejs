@@ -1,3 +1,12 @@
+<!-- 
+    Pearl Lin
+    6.4.2023
+
+    Page for displaying and changing the user's settings
+
+-->
+
+
 <!DOCTYPE html>
 
 <html>
@@ -7,6 +16,7 @@
     <body>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         
+        <!-- username and dropdown list -->
         <div class="fixedTopLeft">
             <div class="fixedUsername">
                 <%=username%>
@@ -20,19 +30,24 @@
             </div>
         </div>
 
+        <!-- Appearance settings -->
         <div class="setting">
             <h1>Appearance</h1>
             <div>
+                <!-- font setting -->
                 <h3>Font</h6>
-                <% let fonts = [`'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif`, `'Courier New', Courier, monospace`, `'Times New Roman', Times, serif`,
-                                `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, `'Papyrus', fantasy`, `'Cambria', Cochin, Georgia, Times, 'Times New Roman', serif`, `'Verdana', Geneva, Tahoma, sans-serif`,
-                                `'Georgia', 'Times New Roman', Times, serif`, `'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif`, `'Arial', Helvetica, sans-serif`] %>
+                <!-- display all available fonts -->
+                <% let fonts = [`'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif`, `'Courier New', Courier, monospace`, `'Times New Roman', Times, serif`, %>
+                <%              `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`, `'Papyrus', fantasy`, `'Cambria', Cochin, Georgia, Times, 'Times New Roman', serif`, `'Verdana', Geneva, Tahoma, sans-serif`, %>
+                <%              `'Georgia', 'Times New Roman', Times, serif`, `'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif`, `'Arial', Helvetica, sans-serif`] %>
                 <% for (let i = 0; i < fonts.length; i++) { %>
                     <div style="font-family: <%=fonts[i]%>;" data-value="<%=fonts[i]%>" class="<%=(settings.FONT_FAMILY == fonts[i]) ? 'fontOption selected' : 'fontOption'%>"><%=fonts[i].substring(fonts[i].indexOf(`'`) + 1, fonts[i].indexOf(',') - 1)%></div>
                 <% } %>
             </div>
             <div>
+                <!-- theme setting -->
                 <h3>Theme</h3>
+                <!-- display all available themes -->
                 <% let themes = [
                     {
                         name: 'Standard',
@@ -105,9 +120,11 @@
             </div>
         </div>
 
+        <!-- Popup settings-->
         <div class="setting">
             <h1>Popups</h1>
             <div>
+                <!-- display delete list popup preference -->
                 <li class="popupSetting">
                     <% if (settings.SHOW_DELETE_LIST_POPUP == 1) { %>
                         <input name="deleteListPopupPreference" type="checkbox" id="deleteListPopupPreference" checked>
@@ -119,6 +136,7 @@
             </div>
         </div>
 
+        <!-- div housing all flash messages -->
         <div id="flashDiv">
             <% for (let i = 0; i < flashError.length; i++) { %>
                 <div class="flashError">
@@ -131,6 +149,7 @@
         <script>
             $(document).ready(function() {
 
+                // error handler for HTTP errors
                 function errorHandler(xhr) {
                     if (xhr.status === 401) {
                         location.href = '/login';
@@ -143,7 +162,7 @@
                     }
                 }
 
-
+                // dropdown list opening and closing mechanism
                 $(document).on('click', '.dropdown', function(e) {
                     e.preventDefault();
 
@@ -159,6 +178,13 @@
                     }
                 });
 
+                // deletes flash message when its dismissal button is clicked
+                $(document).on('click', '.dismissFlash', function(e) {
+                    e.preventDefault();
+                    $(this).closest('div').remove();
+                });
+
+                // detects change in user font setting, sends an ajax POST request to update the database
                 $(document).on('click', '.fontOption', function(e) {
                     e.preventDefault();
 
@@ -185,6 +211,7 @@
                     }
                 });
 
+                // detects change in user's delete list popup preference, sends an ajax POST request to update the database
                 $(document).on('change', '#deleteListPopupPreference', function(e) {
                     e.preventDefault();
 
@@ -203,28 +230,31 @@
                     });
                 });
 
+                // detects change in user's theme setting, sends an ajax POST request to update the database
                 $(document).on('click', '.themeOption', function(e) {
                     e.preventDefault();
 
                     let div = $(this);
 
-                    $.ajax({
-                        type: 'POST',
-                        url: '/changeTheme',
-                        data: {
-                            theme: div.data().value
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                $('.themeOption.selected').removeClass('selected');
-                                div.addClass('selected');
-                            }
-                            else {
-                                $('#flashDiv').append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
-                            }
-                        },
-                        error: errorHandler
-                    });
+                    if (!div.hasClass('selected')) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/changeTheme',
+                            data: {
+                                theme: div.data().value
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    $('.themeOption.selected').removeClass('selected');
+                                    div.addClass('selected');
+                                }
+                                else {
+                                    $('#flashDiv').append(`<div class="flashError"><div>${response.body.message}</div><input type="button" class="dismissFlash dismissFlashError" value="Dismiss"></div>`);
+                                }
+                            },
+                            error: errorHandler
+                        });
+                    }
                 });
                 
             });

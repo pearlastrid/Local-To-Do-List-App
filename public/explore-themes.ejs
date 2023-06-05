@@ -1,3 +1,14 @@
+<!--
+    Pearl Lin
+    6.4.2023
+
+    Page illustrating the different color themes available in the To-Do List app
+
+
+-->
+
+
+
 <!DOCTYPE html>
 
 <html>
@@ -7,7 +18,7 @@
     <body>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
+        <!-- username and dropdown list -->
         <div class="fixedTopLeft">
             <div class="fixedUsername">
                 <%=username%>
@@ -21,11 +32,14 @@
             </div>
         </div>
 
+        <!-- themes -->
         <div class="themes">
+            <!-- array of themes -->
             <% let themes = ['Standard', 'Tropical', 'Midnight', 'Aurora', 'Lemonade', 'Europa', 'Terracotta', 'Galaxy', 'Alice', 'Summer']; %>
             <% for (let i = 0; i < themes.length; i++) { %>
                 <div class="theme <%=themes[i]%>">
                     <h1><%=themes[i]%></h1>
+                    <!-- color array to display color scheme -->
                     <div class="colorArray">
                         <div class="color1"></div>
                         <div class="color2"></div>
@@ -34,6 +48,7 @@
                         <div class="color5"></div>
                     </div>
                     
+                    <!-- list styled with the color scheme -->
                     <div class="toDos">
                         <div class="list">
                             <input type="text" class="listTitle" value="Untitled">
@@ -65,6 +80,7 @@
         
         <script>
             $(document).ready(function() {
+                // dropdown list opening and closing mechanism
                 $(document).on('click', '.dropdown', function(e) {
                     e.preventDefault();
 
@@ -80,6 +96,7 @@
                     }
                 });
 
+                // strikethrough To-Do when checkbox is checked
                 $(document).on('change', '.toDoCheckbox', function(e) {
                     e.preventDefault();
                     let li = $(this).closest('li');
